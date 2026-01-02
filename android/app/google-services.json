@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "899305284022",
+    "project_id": "cazzcar-1374e",
+    "storage_bucket": "cazzcar-1374e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899305284022:android:c908a8d0b84f2089e12117",
+        "android_client_info": {
+          "package_name": "com.example.cazzcar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu__7ERnkD4rbOe33F4W52cMlIMyupldE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
