@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -40,49 +41,49 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC0RhVlAiipW_glOIdLDOzCZppNNzLHgpI',
-    appId: '1:899305284022:web:675baf560970e06ae12117',
-    messagingSenderId: '899305284022',
-    projectId: 'cazzcar-1374e',
-    authDomain: 'cazzcar-1374e.firebaseapp.com',
-    storageBucket: 'cazzcar-1374e.firebasestorage.app',
-    measurementId: 'G-THZLPEMN03',
+  static FirebaseOptions get web => FirebaseOptions(
+    apiKey: dotenv.env['WEB_API_KEY']!,
+    appId: dotenv.env['WEB_APP_ID']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
+    measurementId: dotenv.env['WEB_MEASUREMENT_ID']!,
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDu__7ERnkD4rbOe33F4W52cMlIMyupldE',
-    appId: '1:899305284022:android:c908a8d0b84f2089e12117',
-    messagingSenderId: '899305284022',
-    projectId: 'cazzcar-1374e',
-    storageBucket: 'cazzcar-1374e.firebasestorage.app',
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: dotenv.env['ANDROID_API_KEY']!,
+    appId: dotenv.env['ANDROID_APP_ID']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAztjh756WPRWVjmIWMzxQ_A-PkCTC3vkE',
-    appId: '1:899305284022:ios:6bb21ca242e71454e12117',
-    messagingSenderId: '899305284022',
-    projectId: 'cazzcar-1374e',
-    storageBucket: 'cazzcar-1374e.firebasestorage.app',
-    iosBundleId: 'com.example.cazzcar',
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: dotenv.env['IOS_API_KEY']!,
+    appId: dotenv.env['IOS_APP_ID']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
+    iosBundleId: dotenv.env['IOS_BUNDLE_ID']!,
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAztjh756WPRWVjmIWMzxQ_A-PkCTC3vkE',
-    appId: '1:899305284022:ios:6bb21ca242e71454e12117',
-    messagingSenderId: '899305284022',
-    projectId: 'cazzcar-1374e',
-    storageBucket: 'cazzcar-1374e.firebasestorage.app',
-    iosBundleId: 'com.example.cazzcar',
+  static FirebaseOptions get macos => FirebaseOptions(
+    apiKey: dotenv.env['IOS_API_KEY']!,
+    appId: dotenv.env['IOS_APP_ID']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
+    iosBundleId: dotenv.env['IOS_BUNDLE_ID']!,
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyC0RhVlAiipW_glOIdLDOzCZppNNzLHgpI',
-    appId: '1:899305284022:web:77ce505db4541bd2e12117',
-    messagingSenderId: '899305284022',
-    projectId: 'cazzcar-1374e',
-    authDomain: 'cazzcar-1374e.firebaseapp.com',
-    storageBucket: 'cazzcar-1374e.firebasestorage.app',
-    measurementId: 'G-L6D8LQ9N6D',
+  static FirebaseOptions get windows => FirebaseOptions(
+    apiKey: dotenv.env['WEB_API_KEY']!, // Uses same API Key as Web usually
+    appId: dotenv.env['WINDOWS_APP_ID']!,
+    messagingSenderId: dotenv.env['FIREBASE_MESSAGING_SENDER_ID']!,
+    projectId: dotenv.env['FIREBASE_PROJECT_ID']!,
+    authDomain: dotenv.env['FIREBASE_AUTH_DOMAIN']!,
+    storageBucket: dotenv.env['FIREBASE_STORAGE_BUCKET']!,
+    measurementId: dotenv.env['WINDOWS_MEASUREMENT_ID']!,
   );
 }

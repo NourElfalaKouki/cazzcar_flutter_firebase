@@ -11,10 +11,10 @@ class AuthViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   // Function to handle Registration
-  Future<bool> register(String email, String password, String name, String role) async {
+  Future<bool> register(String email, String password, String name) async {
     _setLoading(true);
     try {
-      await _repo.signUp(email, password, name, role);
+      await _repo.signUp(email, password, name);
       _errorMessage = null;
       return true;
     } catch (e) {
@@ -35,6 +35,19 @@ class AuthViewModel extends ChangeNotifier {
     } catch (e) {
       _errorMessage = e.toString();
       return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // NEW: Function to handle Sign Out
+  Future<void> signOut() async {
+    _setLoading(true);
+    try {
+      await _repo.signOut();
+      _errorMessage = null;
+    } catch (e) {
+      _errorMessage = e.toString();
     } finally {
       _setLoading(false);
     }

@@ -14,7 +14,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  String selectedRole = 'buyer'; 
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +40,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Text("I want to:", style: TextStyle(fontWeight: FontWeight.bold, color: colorScheme.onSurface)),
             const SizedBox(height: 10),
             
-            // Role Selection
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'buyer', label: Text("Buy"), icon: Icon(Icons.shopping_cart)),
-                ButtonSegment(value: 'seller', label: Text("Sell"), icon: Icon(Icons.sell)),
-              ],
-              selected: {selectedRole},
-              onSelectionChanged: (Set<String> newSelection) {
-                setState(() => selectedRole = newSelection.first);
-              },
-            ),
             
             const SizedBox(height: 40),
             PrimaryButton(
@@ -62,11 +50,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   emailController.text.trim(),
                   passwordController.text.trim(),
                   nameController.text.trim(),
-                  selectedRole,
                 );
                 if (success) Navigator.pop(context); // Go back to login
               },
-            ),
+            ),               
           ],
         ),
       ),

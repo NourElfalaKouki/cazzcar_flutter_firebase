@@ -1,3 +1,4 @@
+// widgets.dart
 import 'package:flutter/material.dart';
 
 /// 1. CUSTOM TEXT FIELD
@@ -77,7 +78,7 @@ class PrimaryButton extends StatelessWidget {
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
-                color: colorScheme.onPrimary, // Match text color
+                color: colorScheme.onPrimary, 
                 strokeWidth: 2,
               ),
             )
@@ -112,8 +113,7 @@ class CarCard extends StatelessWidget {
     return Card(
       elevation: 0,
       clipBehavior: Clip.antiAlias,
-      // Use surface variant for the card background to pop against the scaffold
-      color: colorScheme.surfaceContainerHighest, 
+      color: colorScheme.surfaceContainerHighest,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
         side: BorderSide(color: colorScheme.outlineVariant, width: 0.5),
@@ -123,39 +123,84 @@ class CarCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Placeholder Image with adaptive colors
+            // --- UPDATED IMAGE SECTION ---
             Container(
-              height: 120,
+              height: 160, // Slightly taller for better visibility
               width: double.infinity,
               color: colorScheme.surfaceVariant,
-              child: Icon(Icons.directions_car, size: 50, color: colorScheme.primary.withOpacity(0.5)),
+              child: imageUrl.isNotEmpty
+                  ? Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      // Shows a progress indicator while the image is downloading
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                            strokeWidth: 2,
+                          ),
+                        );
+                      },
+                      // Fallback icon if the image URL is broken or fails
+                      errorBuilder: (context, error, stackTrace) => Icon(
+                        Icons.broken_image_outlined,
+                        size: 40,
+                        color: colorScheme.error.withAlpha(128),
+                      ),
+                    )
+                  : Icon(
+                      Icons.directions_car,
+                      size: 50,
+                      color: colorScheme.primary.withAlpha(128),
+                    ),
             ),
+            
+            // --- TEXT DETAILS ---
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "$brand $model", 
+                    "$brand $model",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold, 
+                      fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: colorScheme.onSurface,
-                    )
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    year, 
-                    style: TextStyle(color: colorScheme.onSurfaceVariant)
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "${price.toStringAsFixed(0)} €", 
+                    "Year: $year",
                     style: TextStyle(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      color: colorScheme.onSurfaceVariant,
+                      fontSize: 13,
                     ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${price.toStringAsFixed(0)} €",
+                        style: TextStyle(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: colorScheme.primary.withAlpha(179),
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -1,117 +1,22 @@
-import 'package:cazzcar/features/auth/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'firebase_options.dart';
-import 'features/auth/auth_vm.dart';
-import 'features/auth/login_screen.dart';
-import 'features/auth/register_screen.dart';
-import 'core/app_theme.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-// lib/main.dart update
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
-import 'firebase_options.dart';
-import 'core/app_theme.dart';
-import 'features/auth/auth_vm.dart';
-import 'features/auth/auth_wrapper.dart';
-import 'features/auth/login_screen.dart';
-import 'features/auth/register_screen.dart';
-import 'features/auth/auth_wrapper.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthViewModel()),
-      ],
-      child: const MyApp(),
-    ),
-  );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'CazzCar',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system, // Switches based on system theme
-      home: const AuthWrapper(),
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
-*/
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthViewModel()),
-      ],
-      child: const MyApp(),
-    ),
-  );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-Widget build(BuildContext context) {
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'OccazCar',
-    
-    // Theme configuration
-    theme: AppTheme.lightTheme,
-    darkTheme: AppTheme.darkTheme,
-    themeMode: ThemeMode.system, // Automatically switches based on Linux/Phone settings
-    
-    home: const RegisterScreen(),
-  );
-}
-}
-
-*/
-
-
-
-/*import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; 
+import 'core/app_theme.dart';
+import 'features/auth/auth_wrapper.dart';
+
+// Import ViewModels
+import 'features/auth/auth_vm.dart';
+import 'features/seller/seller_vm.dart';
+import 'features/buyer/buyer_vm.dart';
+import 'features/chat/chat_vm.dart';
 
 void main() async {
-  // 1. Same engine lock as above
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // 2. Same Firebase connection
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // 3. DIRECT LAUNCH
-  // No Providers, no wrappers. Just launches the visual UI immediately.
   runApp(const MyApp());
 }
 
@@ -120,48 +25,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CazzCar',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      // 4. DUMMY UI
-      // Instead of a complex screen, we just put a white screen with Text.
-      // If you see this text, you know lines 1 & 2 succeeded.
-      home: const Scaffold(body: Center(child: Text("Firebase is Running!"))),
-    );
-  }
-}
-
-
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart'; 
-
-void main() async {
-  // 1. Same engine lock as above
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // 2. Same Firebase connection
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  // 3. DIRECT LAUNCH
-  // No Providers, no wrappers. Just launches the visual UI immediately.
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CazzCar',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      // 4. DUMMY UI
-      // Instead of a complex screen, we just put a white screen with Text.
-      // If you see this text, you know lines 1 & 2 succeeded.
-      home: const Scaffold(body: Center(child: Text("Firebase is Running!"))),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => SellerViewModel()),
+        ChangeNotifierProvider(create: (_) => BuyerViewModel()),
+        ChangeNotifierProvider(create: (_) => ChatViewModel()),
+      ],
+      child: MaterialApp(
+        title: 'Car Marketplace',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme, 
+        home: const AuthWrapper(),
+      ),
     );
   }
 }
@@ -170,9 +46,6 @@ class MyApp extends StatelessWidget {
 
 
 
-
-
-*/
 
 
 

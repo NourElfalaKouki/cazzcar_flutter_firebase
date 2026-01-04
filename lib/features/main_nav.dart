@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'buyer/home_screen.dart';
 import 'seller/my_ads_screen.dart';
-import 'chat/chat_screen.dart';
-// Note: You might need to create profile_screen.dart in features/auth/ or a new folder
-// For now, we will use a placeholder.
+import 'chat/chat_list_screen.dart';
+import 'profile/profile_screen.dart'; 
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -15,11 +14,12 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [
-    const HomeScreen(),      // Explore vehicles
-    const MyAdsScreen(),     // Manage my listings (Seller part)
-    const ChatScreen(),      // Messages
-    const Center(child: Text("Profile Screen")), // Placeholder for Profile
+  // The 4 Main Tabs of your App
+  final List<Widget> _pages = [
+    const HomeScreen(),     // 0: Buyer
+    const MyAdsScreen(),    // 1: Seller
+    const ChatListScreen(), // 2: Inbox
+    const ProfileScreen(),  // 3: Account/Logout
   ];
 
   @override
@@ -27,31 +27,29 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      body: _pages[_currentIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
-        onDestinationSelected: (int index) => setState(() => _currentIndex = index),
-        backgroundColor: colorScheme.surface,
-        indicatorColor: colorScheme.primaryContainer,
+        onDestinationSelected: (index) => setState(() => _currentIndex = index),
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.search),
-            label: 'Explore',
+            icon: Icon(Icons.search), 
+            label: 'Buy'
           ),
           NavigationDestination(
-            icon: Icon(Icons.directions_car),
-            label: 'My Ads',
+            icon: Icon(Icons.add_circle_outline), 
+            selectedIcon: Icon(Icons.add_circle),
+            label: 'Sell'
           ),
           NavigationDestination(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: 'Chats',
+            icon: Icon(Icons.chat_bubble_outline), 
+            selectedIcon: Icon(Icons.chat_bubble),
+            label: 'Inbox'
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
+            icon: Icon(Icons.person_outline), 
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile'
           ),
         ],
       ),
