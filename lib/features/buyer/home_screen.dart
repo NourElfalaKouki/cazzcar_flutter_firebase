@@ -1,65 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/widgets.dart';
+import '../../core/widgets.dart'; // Assuming CarCard is here
 import 'buyer_vm.dart';
 import 'car_detail_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final buyerVM = Provider.of<BuyerViewModel>(context);
+    // We don't need the VM variable here anymore, the Consumer handles it
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("CazzCar Explore"),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(70),
+          preferredSize: const Size.fromHeight(80),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              onChanged: (val) => buyerVM.setSearchQuery(val),
-              decoration: InputDecoration(
-                hintText: "Search by brand or model...",
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: colorScheme.surface.withAlpha(128),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
-                ),
-              ),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Consumer<BuyerViewModel>(
+              builder: (context, vm, _) {
+                return TextField(
+                  controller: _searchController,
+                  // Calling the VM method updates the state immediately
+                  onChanged: (val) => vm.setSearchQuery(val),
+                  decoration: InputDecoration(
+                    hintText: "Search by brand or model...",
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _searchController.clear();
+                              vm.setSearchQuery("");
+                            },
+                          )
+                        : null,
+                  ),
+                );
+              },
             ),
           ),
         ),
       ),
-      body: StreamBuilder(
-        stream: buyerVM.carsStream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      // REPLACED StreamBuilder with Consumer
+      body: Consumer<BuyerViewModel>(
+        builder: (context, vm, child) {
+          // 1. Handle Loading
+          if (vm.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          final cars = snapshot.data ?? [];
 
-          if (cars.isEmpty) {
-            return const Center(
-              child: Text("No cars found matching your search."),
+          // 2. Handle Empty State
+          if (vm.cars.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.search_off, size: 64, color: colorScheme.outline),
+                  const SizedBox(height: 16),
+                  Text(
+                    "No cars found matching your search.",
+                    style: TextStyle(color: colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
             );
           }
 
+          // 3. Handle Data List
           return GridView.builder(
             padding: const EdgeInsets.all(16),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // Two columns like a real marketplace
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.75, // Adjust for the card height
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.72,
             ),
-            itemCount: cars.length,
+            itemCount: vm.cars.length,
             itemBuilder: (context, index) {
-              final car = cars[index];
+              final car = vm.cars[index];
               return CarCard(
                 imageUrl: car.images.isNotEmpty ? car.images.first : "",
                 brand: car.brand,
@@ -67,7 +101,6 @@ class HomeScreen extends StatelessWidget {
                 price: car.price,
                 year: car.year.toString(),
                 onTap: () {
-                  // Navigate to Car Detail Screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(

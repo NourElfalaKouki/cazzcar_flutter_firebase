@@ -8,12 +8,20 @@ class ChatViewModel extends ChangeNotifier {
 
   String get currentUserId => FirebaseAuth.instance.currentUser?.uid ?? "";
 
-  // 1. FOR THE INBOX
+  // 1. INBOX STREAM
   Stream<List<ChatRoomModel>> get myInboxStream {
+    if (currentUserId.isEmpty) return const Stream.empty();
     return _repo.getMyChatRooms(currentUserId);
   }
 
-  // 2. FOR THE ACTIVE CHAT: Send a message
+  // Helper: Ensures User A and User B always have the same Room ID (e.g., "A_B_CarID")
+  String _generateChatRoomId(String u1, String u2, String carId) {
+    List<String> users = [u1, u2];
+    users.sort(); // Sort alphabetically so ID is consistent regardless of who sends
+    return "${users[0]}_${users[1]}_$carId";
+  }
+
+  // 2. SEND MESSAGE
   Future<void> sendChatMessage({
     required String receiverId,
     required String text,
@@ -23,8 +31,8 @@ class ChatViewModel extends ChangeNotifier {
   }) async {
     if (text.trim().isEmpty) return;
 
-    final roomId = _repo.getChatRoomId(currentUserId, receiverId, carId);
-    
+    final roomId = _generateChatRoomId(currentUserId, receiverId, carId);
+
     final message = MessageModel(
       senderId: currentUserId,
       text: text,
@@ -44,9 +52,13 @@ class ChatViewModel extends ChangeNotifier {
     await _repo.sendMessage(roomId, message, roomInfo);
   }
 
-  // 3. FOR THE ACTIVE CHAT: Get real-time messages for one specific room
+  // 3. GET MESSAGES (This was missing!)
   Stream<List<MessageModel>> getMessages(String receiverId, String carId) {
-    final roomId = _repo.getChatRoomId(currentUserId, receiverId, carId);
+    if (currentUserId.isEmpty) return const Stream.empty();
+    
+    // We recreate the Room ID using the exact same logic as when sending
+    final roomId = _generateChatRoomId(currentUserId, receiverId, carId);
+    
     return _repo.getMessages(roomId);
   }
 }

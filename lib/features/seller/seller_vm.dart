@@ -21,7 +21,6 @@ class SellerViewModel extends ChangeNotifier {
   List<Map<String, dynamic>> _tempHistory = [];
   List<Map<String, dynamic>> get tempHistory => _tempHistory;
 
-  // --- IMAGE PICKING ---
   Future<void> pickImages() async {
     final List<XFile> images = await _picker.pickMultiImage();
     if (images.isNotEmpty) {
@@ -30,7 +29,6 @@ class SellerViewModel extends ChangeNotifier {
     }
   }
 
-  // --- PUBLISH AD LOGIC ---
   Future<bool> uploadVehicle({
     required String brand,
     required String model,
@@ -39,26 +37,30 @@ class SellerViewModel extends ChangeNotifier {
     required double mileage,
     required String description,
   }) async {
-    if (_selectedImages.isEmpty) return false;
+
 
     _setLoading(true);
-
-    // Track URLs here so we can access them in both 'try' and 'catch' blocks
     List<String> uploadedUrls = [];
 
     try {
       final String userId = FirebaseAuth.instance.currentUser!.uid;
 
-      // 1. Get Location
       GeoPoint? position = await _locationService.getCurrentLocation();
-
-      // Default to a central point if GPS is off/denied (e.g., Paris)
       GeoPoint finalLocation = position ?? const GeoPoint(48.8566, 2.3522);
 
-      // 2. Upload Images to Storage
+      // FIX 2: SWITCHED TO REAL STORAGE UPLOAD
+      // We are now actually uploading the files to Firebase Storage
       uploadedUrls = await _carRepo.uploadImages(_selectedImages, userId);
 
-      // 3. Create Car Model
+      /* // --- FAKE MODE DISABLED ---
+      // Keep this only if you want to test without internet/storage
+      await Future.delayed(const Duration(seconds: 1)); 
+      uploadedUrls = List.generate(
+        _selectedImages.length, 
+        (index) => "https://placehold.co/600x400/png?text=$brand+$model+${index + 1}"
+      );
+      */
+
       CarModel newCar = CarModel(
         sellerId: userId,
         brand: brand,
@@ -67,27 +69,25 @@ class SellerViewModel extends ChangeNotifier {
         price: price,
         mileage: mileage,
         description: description,
-        images: uploadedUrls, // Use the URLs we just got
+        images: uploadedUrls, // Using real URLs now
         location: finalLocation,
-        history: [],
+        history: _tempHistory,
         createdAt: DateTime.now(),
       );
 
-      // 4. Save to Firestore (The Critical Step)
       await _carRepo.addCar(newCar);
 
-      _selectedImages = []; // Clear for next time
+      _selectedImages = [];
+      _tempHistory = [];
       return true;
+
     } catch (e) {
       debugPrint("Upload failed: $e");
-
-      // --- ROLLBACK SAFETY ---
+      // FIX 3: RESTORED ROLLBACK
+      // If Firestore fails, we delete the images to keep storage clean
       if (uploadedUrls.isNotEmpty) {
-        debugPrint("Rolling back: Deleting orphaned images...");
         await _carRepo.deleteImages(uploadedUrls);
       }
-      // -----------------------
-
       return false;
     } finally {
       _setLoading(false);
@@ -98,8 +98,6 @@ class SellerViewModel extends ChangeNotifier {
     _isLoading = val;
     notifyListeners();
   }
-
-  
 
   void addHistoryEntry(String service, String date) {
     _tempHistory.add({'service': service, 'date': date});

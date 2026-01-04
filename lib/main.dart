@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // 1. IMPORT THIS
 
-import 'firebase_options.dart'; 
+import 'firebase_options.dart';
 import 'core/app_theme.dart';
 import 'features/auth/auth_wrapper.dart';
 
@@ -15,6 +15,10 @@ import 'features/chat/chat_vm.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+
+  await dotenv.load(fileName: "lib/.env");
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
@@ -35,32 +39,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Car Marketplace',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme, 
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
         home: const AuthWrapper(),
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
