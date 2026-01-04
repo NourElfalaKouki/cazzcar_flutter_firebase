@@ -1,6 +1,6 @@
 # 🚗 CazzCar
 
-**CazzCar** is a premiumcar marketplace application built with Flutter. It facilitates buying and selling vehicles with features like real-time chat, geolocation tagging, and **AI-powered** descriptiom generation using Google Gemini.
+**CazzCar** is a car marketplace application built with Flutter. It facilitates buying and selling vehicles with features like real-time chat, geolocation tagging, and **AI-powered** descriptiom generation using Google Gemini.
 
 ## 🏗️ Architecture
 
@@ -20,6 +20,7 @@ lib
 ├── core                           // Core utilities and shared resources
 │   ├── app_theme.dart             // Centralized theme configuration (colors, fonts)
 │   └── widgets.dart               // Reusable UI components (Buttons, TextFields)
+│  
 ├── features                      
 │   ├── auth                      
 │   │   ├── auth_vm.dart           // Logic for login, registration, and logout
@@ -43,15 +44,17 @@ lib
 │       ├── my_ads_screen.dart     // List of ads posted by the current user
 │       └── seller_vm.dart         // Logic for uploading images and saving car data
 ├── firebase_options.dart          // Auto-generated Firebase configuration file
-├── main.dart                      // Entry point of the application
+├── main.dart                     
 ├── models                         // Data blueprints (plain Dart classes)
 │   ├── car_model.dart             // Structure for vehicle data
 │   ├── chat_model.dart            // Structure for message data
 │   └── user_model.dart            // Structure for user profile data
+│  
 ├── repositories                   // Data handling layer (Talks to Firebase)
 │   ├── auth_repo.dart             // Handles FirebaseAuth methods
 │   ├── car_repo.dart              // Handles Firestore CRUD operations for cars
 │   └── chat_repo.dart             // Handles message streams and Firestore chat storage
+│  
 └── services                       // External API and Device services
     ├── ai_service.dart            // Connects to Gemini API to generate car descriptions
     └── location_service.dart      // Handles device GPS to get current coordinates
