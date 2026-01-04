@@ -1,15 +1,68 @@
 # 🚗 CazzCar
 
 **CazzCar** is a car marketplace application built with Flutter. It facilitates buying and selling vehicles with features like real-time chat, geolocation tagging, and **AI-powered** descriptiom generation using Google Gemini.
+### 1. Functional Requirements
 
+The application is designed to serve two main actors: **Sellers** and **Buyers**.
+
+* **User Management:**
+    * Secure Sign Up and Login using Email/Password.
+    * Session persistence (Keep users logged in).
+    * Profile management and secure Logout.
+
+* **Seller Module:**
+    * **Ad Creation:** Input vehicle details (Brand, Model, Year, Mileage, Price).
+    * **Media:** Select images from the device gallery.
+    * **AI Assistance:** Use Google Gemini to auto-generate persuasive car descriptions based on specs.
+    * **Geolocation:** Automatically fetch and save the current GPS coordinates of the vehicle.
+    * **Vehicle Tracking:** Log service/maintenance history (e.g., "Oil Change - Jan 2024") to increase trust.
+
+* **Buyer Module:**
+    * **Feed/Exploration:** Browse a list of available vehicles with prices and photos.
+    * **Search:** Filter vehicles by brand or model.
+    * **Detail View:** View full specifications, history logs, and AI descriptions.
+    * **Map Integration:** Launch external maps (Google Maps) to see the vehicle's location.
+
+* **Communication:**
+    * **Contextual Chat:** Real-time messaging linked specifically to a vehicle listing.
+    * **Inbox:** View a list of active conversations.
+
+### 2. Non-Functional Requirements
+
+* **Performance:** Fluid UI rendering (60fps) using Flutter's engine.
+* **Availability:** Data is hosted on Cloud Firestore, ensuring 24/7 availability across devices.
+* **Scalability:** The MVVM architecture allows for easy addition of new features without breaking existing logic.
+* **Security:** authentication handled securely via Firebase Auth.
 ## 🏗️ Architecture
-
+### Logical Architecture
 This project follows a **Clean Architecture** approach using the **MVVM (Model-View-ViewModel)** pattern. This structure ensures a clear separation of concerns, making the app scalable and testable.
 
 * **View (`_screen.dart`):** The UI layer. It displays data and captures user input, observing the ViewModel for state changes.
 * **ViewModel (`_vm.dart`):** The business logic layer using `Provider`. It manages state (loading, data, errors) and communicates with Repositories.
 * **Repository (`_repo.dart`):** The data layer. It handles direct interactions with the backend (Firebase Firestore, Auth, Storage).
 * **Services:** specialized classes for external device features or APIs (AI, Location).
+
+  ###  Physical Architecture 
+
+The system operates on a **Client-Server** model.
+
+1. **Client (Mobile Device):**
+
+   * The compiled Flutter application running on Android/iOS.
+
+   * Handles local hardware access (Camera, GPS/Location Sensors).
+
+2. **Backend-as-a-Service (Firebase):**
+
+   * **Auth:** Handles identity management.
+
+   * **Firestore:** NoSQL database for structured data (Cars, Users, Chats).
+
+   * **Storage:** Object storage for vehicle images.
+
+3. **External Services:**
+
+   * **Google Gemini API:** Cloud-based AI for text generation.
 
 ## 📂 Project Structure
 
